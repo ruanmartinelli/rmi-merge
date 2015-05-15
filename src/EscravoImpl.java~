@@ -18,10 +18,12 @@ public class EscravoImpl implements EscravoService {
 	public void setId(String id) throws RemoteException {
 		this.id = id;
 	}
+        //Modificações feita hj-------------------------------------
         public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException{
             Collections.sort(lista);
             return lista;
         }
+        //Modificações feita hj-------------------------------------
 
 	public static void main(String[] args) {
 

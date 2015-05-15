@@ -30,6 +30,7 @@ public class MestreImpl implements MestreService {
 
 	@Override
 	public List<Integer> ordena(List<Integer> lista) throws RemoteException {
+		//lista.add(1337);
             
                 //Modificações feita hj-------------------------------------
                 //----------OBS: O MÉTODO RUN() QUE CHAMA O ORDENAR DO ESCRAVO----------

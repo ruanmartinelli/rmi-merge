@@ -6,4 +6,4 @@ all:
 	javac EscravoImpl.java
 	javac EscravoService.java
 	clear
-	java MestreImpl
+ 

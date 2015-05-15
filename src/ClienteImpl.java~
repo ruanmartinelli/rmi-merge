@@ -28,7 +28,7 @@ public class ClienteImpl implements ClienteService{
 		
 		try {
 			Registry registry 	= LocateRegistry.getRegistry(host);
-			stubMestre			= (MestreService) registry.lookup("RuanBruno");
+			stubMestre			= (MestreService) registry.lookup("Mestre");
 			
 		} catch (RemoteException e) {
 			e.printStackTrace();
