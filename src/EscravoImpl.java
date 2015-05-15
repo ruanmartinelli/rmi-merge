@@ -3,6 +3,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collections;
+import java.util.List;
 
 
 public class EscravoImpl implements EscravoService {
@@ -16,12 +18,19 @@ public class EscravoImpl implements EscravoService {
 	public void setId(String id) throws RemoteException {
 		this.id = id;
 	}
+        //Modificações feita hj-------------------------------------
+        public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException{
+            Collections.sort(lista);
+            return lista;
+        }
+        //Modificações feita hj-------------------------------------
 
 	public static void main(String[] args) {
 
 		/* Procura mestre */
 		String host = (args.length < 1) ? null : args[0];
-
+                
+                // esta interface(mestre) tem que ficar junto ao escravo
 		MestreService mestre;
 
 		try {
@@ -32,7 +41,11 @@ public class EscravoImpl implements EscravoService {
 			//escravo.setId(UUID.randomUUID().toString());
 
 			EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 0);
-
+                        //aqui deve vir a função de ordernar do escravo,STUBzar o resultado e mandar de volta pro mestre
+                        //Modificações feita hj-------------------------------------
+                        
+                        
+                        //modificações feita hj-------------------------------------
 			mestre.registraEscravo(stub);
 
 		} catch (RemoteException | NotBoundException e) {
