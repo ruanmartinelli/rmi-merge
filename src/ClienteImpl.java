@@ -52,7 +52,7 @@ public class ClienteImpl implements ClienteService{
 			MestreService stub = (MestreService) registry.lookup("RuanBruno");
 			
 			List<Integer> ordenada = stub.ordena(lista);
-			
+			System.out.println("Lista Cliente: ");
 			for(Integer i : ordenada){
 				System.out.print(i + ", ");
 			}
