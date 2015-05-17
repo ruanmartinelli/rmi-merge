@@ -8,4 +8,5 @@ public interface MestreService extends java.rmi.Remote{
 
 	public void registraEscravo(EscravoService escravo) throws RemoteException;
 	
+	public void removeEscravo(String id) throws RemoteException;
 }

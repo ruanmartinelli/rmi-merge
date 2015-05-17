@@ -6,7 +6,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
 import java.util.List;
 
-public class EscravoImpl implements EscravoService{
+public class EscravoImpl implements EscravoService {
 
 	public String id;
 
@@ -18,16 +18,26 @@ public class EscravoImpl implements EscravoService{
 		this.id = id;
 	}
 
-	public List<Integer> ordenaEscravo(List<Integer> lista)	throws RemoteException {
-				Collections.sort(lista);
-				System.out.println("ESCRAVO: ");
-				for(Integer i : lista){
-					System.out.print(i + "-");
-				}
-				lista.add(8888);
-				return lista;
+	public List<Integer> ordenaEscravo(List<Integer> lista)
+			throws RemoteException {
+		Collections.sort(lista);
+		return lista;
 	}
 
+	public void attachShutDownHook(final MestreService mestre) {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				try {
+					mestre.removeEscravo(id);
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Slave free: " + id);
+			}
+		});
+	}
+	
 	public static void main(String[] args) {
 
 		/* Procura mestre */
@@ -35,41 +45,28 @@ public class EscravoImpl implements EscravoService{
 
 		MestreService mestre;
 
-		System.out.println("Connection try at: " +  host);
+		System.out.println("Connection try at: " + host);
 
-		if(args.length > 1){
+		if (args.length > 1) {
 			/* Para rodar remoto */
 			System.setProperty("java.rmi.server.hostname", args[0]);
 		}
-		
+
 		try {
 			Registry registry = LocateRegistry.getRegistry(host);
 
 			mestre = (MestreService) registry.lookup("RuanBruno");
 
 			EscravoImpl escravo = new EscravoImpl();
-			// escravo.setId(UUID.randomUUID().toString());
-			
-			
-			
-			
-			
-			
-			/* REMOTO
-			EscravoService stub = (EscravoService) UnicastRemoteObject
-					.exportObject(escravo, 2001);
-			*/
-			EscravoService stub = (EscravoService) UnicastRemoteObject
-					.exportObject(escravo, 0);
-			
-			
-			
-			
-			
-			
-			// aqui deve vir a função de ordernar do escravo,STUBzar o
-			// resultado e mandar de volta pro mestre
+
+			/*
+			 * REMOTO 
+			 * EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 2001);
+			 */
+			EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 0);
+
 			mestre.registraEscravo(stub);
+			escravo.attachShutDownHook(mestre);
 
 		} catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
@@ -77,5 +74,4 @@ public class EscravoImpl implements EscravoService{
 
 	}
 
-	
 }
