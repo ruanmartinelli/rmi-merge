@@ -10,9 +10,8 @@ public interface EscravoService extends java.rmi.Remote {
 	
 	public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException;
 	
+	public Long getRecebido() throws RemoteException;
 	
-	// teste
-	
-	//tesete
+	public Long getEnviado() throws RemoteException;
 	
 }

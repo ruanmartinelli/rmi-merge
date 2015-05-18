@@ -9,6 +9,17 @@ import java.util.List;
 public class EscravoImpl implements EscravoService {
 
 	public String id;
+	private Long recebido, enviado;
+	
+	
+
+	public Long getRecebido() throws RemoteException {
+		return recebido;
+	}
+
+	public Long getEnviado() throws RemoteException {
+		return enviado;
+	}
 
 	public String getId() throws RemoteException {
 		return id;
@@ -18,9 +29,10 @@ public class EscravoImpl implements EscravoService {
 		this.id = id;
 	}
 
-	public List<Integer> ordenaEscravo(List<Integer> lista)
-			throws RemoteException {
+	public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException {
+		recebido = System.nanoTime();
 		Collections.sort(lista);
+		enviado = System.nanoTime();
 		return lista;
 	}
 

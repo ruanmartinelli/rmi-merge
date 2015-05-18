@@ -1,4 +1,5 @@
 import java.io.FileNotFoundException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.rmi.NotBoundException;
@@ -6,10 +7,10 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
+
+import javax.imageio.stream.FileImageOutputStream;
 
 public class ClienteImpl implements ClienteService {
 
@@ -63,27 +64,53 @@ public class ClienteImpl implements ClienteService {
 			registry = LocateRegistry.getRegistry(host);
 			MestreService stub = (MestreService) registry.lookup("RuanBruno");
 
-			PrintWriter arquivo = new PrintWriter("benchmark" + situacao
+			PrintWriter tamanhoXtempo = new PrintWriter("benchmark " + situacao
+					+ ".csv");
+			
+			PrintWriter overheadClienteMestre = new PrintWriter("overhead-cliente-mestre " + situacao
+					+ ".csv");
+			
+			PrintWriter overheadMestreEscravos= new PrintWriter("overhead-mestre-escravo " + situacao
 					+ ".csv");
 
 			StringBuilder linha = new StringBuilder();
 
-			for (int i = 0; i < 1000; i = i + 100) {
+			for (int i = 10; i < 1000 ; i = i + 100) {
 				lista = initLista(i);
 
 				Long antes = System.nanoTime();
+				System.out.println(lista.size() + " tamanho lista");
 				List<Integer> ordenada = stub.ordena(lista);
 				Long depois = System.nanoTime();
-
+				
+				Long recebidoMestre = stub.getRecebido();
+				Long enviadoMestre = stub.getEnviado();
+				
+				Long overheadComunicacaoClienteMestre = (recebidoMestre - antes) + (depois - enviadoMestre );
+				
+				StringBuilder overhead = new StringBuilder();
+				overhead.append(i).append(",").append(overheadComunicacaoClienteMestre/ 1000000000.0);
+				overhead.append(System.getProperty("line.separator"));
+				overheadClienteMestre.write(overhead.toString());
+				overhead.setLength(0);
+				
+				Long overheadComunicacaoMestreEscravos = stub.getOverheadEscravos();
+				overhead.append(i).append(",").append(overheadComunicacaoMestreEscravos / 1000000000.0);
+				overhead.append(System.getProperty("line.separator"));
+				overheadMestreEscravos.write(overhead.toString());
+				overhead.setLength(0);
+				
 				Long tempo = depois - antes;
 				linha.append(i);
 				linha.append(",");
 				linha.append(tempo / 1000000000.0);
 				linha.append("\n");
-				arquivo.write(linha.toString());
+				tamanhoXtempo.write(linha.toString());
 				linha.setLength(0);
 			}
-			arquivo.close();
+			tamanhoXtempo.close();
+			overheadClienteMestre.close();
+			overheadMestreEscravos.close();
 
 		} catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
