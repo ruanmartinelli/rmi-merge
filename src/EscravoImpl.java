@@ -59,7 +59,7 @@ public class EscravoImpl implements EscravoService {
 
 		System.out.println("Connection try at: " + host);
 
-		if (args.length > 1) {
+		if (args.length > 0) {
 			/* Para rodar remoto */
 			System.setProperty("java.rmi.server.hostname", args[0]);
 		}
@@ -71,11 +71,10 @@ public class EscravoImpl implements EscravoService {
 
 			EscravoImpl escravo = new EscravoImpl();
 
-			/*
-			 * REMOTO 
-			 * EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 2001);
-			 */
-			EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 0);
+			
+			 EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 2001);
+			 
+			//EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 0);
 
 			mestre.registraEscravo(stub);
 			escravo.attachShutDownHook(mestre);

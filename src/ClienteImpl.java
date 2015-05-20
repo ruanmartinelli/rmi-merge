@@ -75,7 +75,7 @@ public class ClienteImpl implements ClienteService {
 
 			StringBuilder linha = new StringBuilder();
 
-			for (int i = 10; i < 1000 ; i = i + 100) {
+			for (int i = 10; i < 1000000 ; i = i + 1000) {
 				lista = initLista(i);
 
 				Long antes = System.nanoTime();

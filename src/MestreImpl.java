@@ -143,8 +143,8 @@ public class MestreImpl implements MestreService {
 
 	/* Main */
 	public static void main(String[] args) {
-		String host = (args.length < 1) ? "" : args[1];
-		if (args.length > 1) {
+		String host = (args.length < 1) ? "" : args[0];
+		if (args.length > 0) {
 
 			/* Para rodar remoto */
 			System.setProperty("java.rmi.server.hostname", args[0]);
@@ -155,12 +155,10 @@ public class MestreImpl implements MestreService {
 		try {
 			MestreImpl obj = new MestreImpl();
 
-			/*
-			 * REMOTO MestreService ref = (MestreService) UnicastRemoteObject
-			 * .exportObject(obj, 2001);
-			 */
-			MestreService ref = (MestreService) UnicastRemoteObject
-					.exportObject(obj, 0);
+			
+			 MestreService ref = (MestreService) UnicastRemoteObject.exportObject(obj, 2001);
+			 
+			//MestreService ref = (MestreService) UnicastRemoteObject.exportObject(obj, 0);
 
 			Registry registry = LocateRegistry.getRegistry(host);
 			System.out.println("Registry found.");
