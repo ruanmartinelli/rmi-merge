@@ -5,21 +5,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class EscravoImpl implements EscravoService {
 
 	public String id;
-	private Long recebido, enviado;
-	
-	
 
-	public Long getRecebido() throws RemoteException {
-		return recebido;
-	}
-
-	public Long getEnviado() throws RemoteException {
-		return enviado;
-	}
 
 	public String getId() throws RemoteException {
 		return id;
@@ -30,9 +21,7 @@ public class EscravoImpl implements EscravoService {
 	}
 
 	public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException {
-		recebido = System.nanoTime();
 		Collections.sort(lista);
-		enviado = System.nanoTime();
 		return lista;
 	}
 
@@ -70,13 +59,13 @@ public class EscravoImpl implements EscravoService {
 			mestre = (MestreService) registry.lookup("RuanBruno");
 
 			EscravoImpl escravo = new EscravoImpl();
-
+			escravo.setId(UUID.randomUUID().toString());
 			
 			 EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 2001);
 			 
 			//EscravoService stub = (EscravoService) UnicastRemoteObject.exportObject(escravo, 0);
 
-			mestre.registraEscravo(stub);
+			mestre.registraEscravo(stub, escravo.getId());
 			escravo.attachShutDownHook(mestre);
 
 		} catch (RemoteException | NotBoundException e) {

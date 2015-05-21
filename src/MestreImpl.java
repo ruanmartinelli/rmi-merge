@@ -12,28 +12,7 @@ public class MestreImpl implements MestreService {
 
 	private Map<String, EscravoService> escravos = new HashMap<String, EscravoService>();
 	private List<Thread> threads = new ArrayList<Thread>();
-	private Long recebido, enviado;
 	
-	private List<Long> overheadEscravos = new ArrayList<Long>();
-
-	
-	
-	public Long getOverheadEscravos() throws RemoteException {
-		Long overheadMax = 0L;
-		for(Long ovhEscravo : overheadEscravos){
-			if(ovhEscravo>overheadMax)
-				overheadMax = ovhEscravo;
-		}
-		return overheadMax;
-	}
-
-	public Long getRecebido() throws RemoteException {
-		return recebido;
-	}
-
-	public Long getEnviado() throws RemoteException{
-		return enviado;
-	}
 
 	/* Metodo para unir as listas dos escravos */
 	private List<Integer> merge(List<Integer> l1, List<Integer> l2) {
@@ -74,7 +53,6 @@ public class MestreImpl implements MestreService {
 
 	@Override
 	public List<Integer> ordena(List<Integer> lista) throws RemoteException {
-		recebido = System.nanoTime();
 		
 		Integer pedaco = lista.size() / escravos.size();
 
@@ -120,20 +98,18 @@ public class MestreImpl implements MestreService {
 		}
 
 		for (ThreadDTO w : workers) {
-			overheadEscravos.add(w.overhead);
 			listaOrdenada = merge(listaOrdenada, w.lista);
 			
 		}
 		
-		enviado = System.nanoTime();
 		return listaOrdenada;
 	}
 	
 
 
 
-	public void registraEscravo(EscravoService e) throws RemoteException {
-		escravos.put(UUID.randomUUID().toString(), e);
+	public void registraEscravo(EscravoService e, String id) throws RemoteException {
+		escravos.put(id, e);
 		System.out.println("Escravo Registrado!");
 	}
 	
@@ -177,9 +153,6 @@ public class MestreImpl implements MestreService {
 		public final EscravoService escravoService;
 		public List<Integer> lista;
 		public Integer[] vet = new Integer[10];
-		public Long recebidoMestre, enviadoMestre;
-		public Long recebidoEscravo, enviadoEscravo;
-		public Long overhead = 0L;
 
 		public ThreadDTO(EscravoService es, List<Integer> lista) {
 			this.escravoService = es;
@@ -190,14 +163,7 @@ public class MestreImpl implements MestreService {
 		public void run() {
 
 			try {
-				enviadoMestre = System.nanoTime();
 				lista = escravoService.ordenaEscravo(lista);
-				recebidoMestre = System.nanoTime();
-				
-				Long recebidoEscravo = escravoService.getRecebido();
-				Long enviadoEscravo = escravoService.getEnviado();
-				
-				overhead = (recebidoEscravo - enviadoMestre) + (recebidoMestre - enviadoEscravo);
 				
 			} catch (RemoteException e) {
 				e.printStackTrace();

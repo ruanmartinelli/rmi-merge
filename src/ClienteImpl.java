@@ -67,15 +67,12 @@ public class ClienteImpl implements ClienteService {
 			PrintWriter tamanhoXtempo = new PrintWriter("benchmark " + situacao
 					+ ".csv");
 			
-			PrintWriter overheadClienteMestre = new PrintWriter("overhead-cliente-mestre " + situacao
+			PrintWriter overhead = new PrintWriter("overhead " + situacao
 					+ ".csv");
 			
-			PrintWriter overheadMestreEscravos= new PrintWriter("overhead-mestre-escravo " + situacao
-					+ ".csv");
-
 			StringBuilder linha = new StringBuilder();
 
-			for (int i = 10; i < 1000000 ; i = i + 1000) {
+			for (int i = 1; i <= 1000000 ; i = i + 999) {
 				lista = initLista(i);
 
 				Long antes = System.nanoTime();
@@ -83,22 +80,6 @@ public class ClienteImpl implements ClienteService {
 				List<Integer> ordenada = stub.ordena(lista);
 				Long depois = System.nanoTime();
 				
-				Long recebidoMestre = stub.getRecebido();
-				Long enviadoMestre = stub.getEnviado();
-				
-				Long overheadComunicacaoClienteMestre = (recebidoMestre - antes) + (depois - enviadoMestre );
-				
-				StringBuilder overhead = new StringBuilder();
-				overhead.append(i).append(",").append(overheadComunicacaoClienteMestre/ 1000000000.0);
-				overhead.append(System.getProperty("line.separator"));
-				overheadClienteMestre.write(overhead.toString());
-				overhead.setLength(0);
-				
-				Long overheadComunicacaoMestreEscravos = stub.getOverheadEscravos();
-				overhead.append(i).append(",").append(overheadComunicacaoMestreEscravos / 1000000000.0);
-				overhead.append(System.getProperty("line.separator"));
-				overheadMestreEscravos.write(overhead.toString());
-				overhead.setLength(0);
 				
 				Long tempo = depois - antes;
 				linha.append(i);
@@ -106,11 +87,11 @@ public class ClienteImpl implements ClienteService {
 				linha.append(tempo / 1000000000.0);
 				linha.append("\n");
 				tamanhoXtempo.write(linha.toString());
+				//overhead.write(linha.toString());
 				linha.setLength(0);
 			}
 			tamanhoXtempo.close();
-			overheadClienteMestre.close();
-			overheadMestreEscravos.close();
+			overhead.close();
 
 		} catch (RemoteException | NotBoundException e) {
 			e.printStackTrace();
