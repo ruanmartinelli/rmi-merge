@@ -98,7 +98,7 @@ public class MestreImpl implements MestreService {
 		}
 
 		for (ThreadDTO w : workers) {
-			listaOrdenada = merge(listaOrdenada, w.lista);
+			//listaOrdenada = merge(listaOrdenada, w.lista);
 			
 		}
 		

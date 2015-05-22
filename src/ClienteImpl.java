@@ -86,8 +86,9 @@ public class ClienteImpl implements ClienteService {
 				linha.append(",");
 				linha.append(tempo / 1000000000.0);
 				linha.append("\n");
-				tamanhoXtempo.write(linha.toString());
-				//overhead.write(linha.toString());
+				System.out.println(linha.toString());
+				//tamanhoXtempo.write(linha.toString());
+				overhead.write(linha.toString());
 				linha.setLength(0);
 			}
 			tamanhoXtempo.close();

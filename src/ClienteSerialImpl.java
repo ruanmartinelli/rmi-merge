@@ -27,7 +27,7 @@ public class ClienteSerialImpl {
 		
 		StringBuilder linha = new StringBuilder();
 		
-		for(int i = 0 ; i < 1000 ; i = i + 100){
+		for(int i = 1; i < 1000000 ; i = i + 999){
 			List<Integer> lista = new ArrayList<Integer>();
 			lista =	initLista(i);
 			

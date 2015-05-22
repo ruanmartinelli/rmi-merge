@@ -21,7 +21,7 @@ public class EscravoImpl implements EscravoService {
 	}
 
 	public List<Integer> ordenaEscravo(List<Integer> lista) throws RemoteException {
-		Collections.sort(lista);
+		//Collections.sort(lista);
 		return lista;
 	}
 
